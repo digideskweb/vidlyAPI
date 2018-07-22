@@ -83,9 +83,7 @@ async function upDateCustomerByID(updateElements) {
     try {
         const upDatedCustomer = await Customer.findOneAndUpdate({id: updateElements.id},
                                                                 {
-                                                                    $set: {
-                                                                        name: updateElements.name
-                                                                    }
+                                                                    $set: updateElements
                                                                 },
                                                                 {new: true}
         );
