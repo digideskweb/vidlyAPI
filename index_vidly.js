@@ -4,12 +4,15 @@ const genre_router = require('./routers/genresWithDB');
 const home_router = require('./homepage/home');
 const morgan = require('morgan');
 const mongoose = require('mongoose');
+const customers = require('./routers/customers');
+
 
 
 app.use(express.json());
 app.use(morgan('tiny'));
 app.use('/', home_router);
 app.use('/api/genres', genre_router);
+app.use('/api/customers', customers);
 connectToMongo();
 
 async function connectToMongo() {

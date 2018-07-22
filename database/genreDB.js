@@ -58,7 +58,7 @@ async function getGenreById(id) {
         console.log(genre);
         return Promise.resolve({result: genre, message: null});
     } catch (e) {
-        console.log('Could not find the course');
+        console.log('Could not find the genre');
         console.log(e.message);
         return Promise.resolve({result: null, message: e.message});
         
