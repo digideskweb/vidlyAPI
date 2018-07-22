@@ -11,7 +11,7 @@ const schema = {
 //GET REQUEST TO SERVER TO SEE ALL GENRES
 router.get('/', (req, res) => {
     
-    genreDB.connectToMongo({taskToDo: genreDB.getGenres})
+    genreDB.getGenres()
            .then((result) => {
                if (!result.message) {
                    res.send(result.result);
@@ -21,7 +21,8 @@ router.get('/', (req, res) => {
                    return;
                }
         
-           }); //no need for catch block. always returns resolved promise
+           });
+    ; //no need for catch block. always returns resolved promise
     
 });
 
@@ -30,7 +31,7 @@ router.get('/:id', (req, res) => {
     //See if id of course exists
     const param_id = parseInt(req.params.id);
     
-    genreDB.connectToMongo({taskToDo: genreDB.getGenreById, id: param_id})
+    genreDB.getGenreById(param_id)
            .then((result) => {
                if (!result.message) {
                    if (result.result.length === 0) {
@@ -66,7 +67,7 @@ router.post('/:id', (req, res) => {
         id: param_id,
     };
     
-    genreDB.connectToMongo({taskToDo: genreDB.createGenre, id: new_genre})
+    genreDB.createGenre(new_genre)
            .then((result) => {
                if (!result.message) {
                    res.send(result.result);
@@ -89,10 +90,10 @@ router.put('/:id', (req, res) => {
     const result = validateGenre(body);
     
     if (result.error) {
-        res.status(404).send(`BAD Request. ${result.error.details[0].message}`);
+        res.status(404).send(`${result.error.details[0].message}`);
         return;
     } else {
-        genreDB.connectToMongo({taskToDo: genreDB.upDateGenreByID, id: body})
+        genreDB.upDateGenreByID(body)
                .then((result) => {
                    if (!result.result) {
                        res.status(404).send(result.message);
@@ -109,13 +110,12 @@ router.put('/:id', (req, res) => {
 router.delete('/:id', (req, res) => {
     const param_id = parseInt(req.params.id);
     
-    genreDB.connectToMongo({taskToDo: genreDB.removeGenreByID, id: param_id})
+    genreDB.removeGenreByID(param_id)
            .then((result) => {
                if (!result.result) {
                    res.status(404).send(result.message);
                    return;
                } else {
-                   console.log("RESULT!!!!!");
                    res.send(result.result);
                    return;
                }

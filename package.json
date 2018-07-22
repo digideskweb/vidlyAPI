@@ -1,7 +1,6 @@
 {
-  "name": "vidly",
+  "name": "vidly2",
   "version": "1.0.0",
-  "description": "",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -11,10 +10,20 @@
   "license": "ISC",
   "dependencies": {
     "express": "^4.16.3",
+    "hbs": "^4.0.1",
     "joi": "^13.4.0",
     "mongoose": "^5.2.4",
     "mongoose-unique-validator": "^2.0.1",
     "morgan": "^1.9.0",
     "moustache": "0.0.2"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nombreinvicto/node_rest_api.git"
+  },
+  "bugs": {
+    "url": "https://github.com/nombreinvicto/node_rest_api/issues"
+  },
+  "homepage": "https://github.com/nombreinvicto/node_rest_api#readme",
+  "description": ""
 }
