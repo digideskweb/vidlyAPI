@@ -36,7 +36,13 @@ async function getCustomers() {
     try {
         console.log("Finding all Customers...");
         const customers = await Customer.find().select({_id: 0});
-        return Promise.resolve({result: customers, message: null}); //need to return Promise so that it can be awaited
+        return Promise.resolve({result: customers, message: null}); //need to
+                                                                    // return
+                                                                    // Promise
+                                                                    // so that
+                                                                    // it can
+                                                                    // be
+                                                                    // awaited
     } catch (e) {                                                // in genresWithDB file
         return Promise.resolve({result: null, message: e.message});
     }
@@ -54,7 +60,8 @@ async function createCustomer(newCustomer) {
                                   });
     
     try {
-        const result = await customer.save(); //raises exception if customer doesnt match schema
+        const result = await customer.save(); //raises exception if customer
+                                              // doesnt match schema
         console.log(result);
         return Promise.resolve({result: result, message: null});
     } catch (e) {
@@ -89,7 +96,10 @@ async function upDateCustomerByID(updateElements) {
         );
         
         if (!upDatedCustomer) {
-            return Promise.resolve({result: null, message: `Customer with ID : ${updateElements.id} does not exist`});
+            return Promise.resolve({
+                                       result: null,
+                                       message: `Customer with ID : ${updateElements.id} does not exist`
+                                   });
         } else {
             return Promise.resolve({result: upDatedCustomer, message: null});
         }
@@ -106,7 +116,10 @@ async function removeCustomerByID(id) {
     try {
         const customer = await Customer.findOneAndRemove({id: id});
         if (!customer) {
-            return Promise.resolve({result: null, message: `Customer with ID : ${id} does not exist`});
+            return Promise.resolve({
+                                       result: null,
+                                       message: `Customer with ID : ${id} does not exist`
+                                   });
         } else {
             return Promise.resolve({result: customer, message: null});
         }

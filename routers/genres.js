@@ -2,20 +2,27 @@ const express = require('express');
 const router = express.Router();
 const Joi = require('joi');
 const genreDB = require('../database/genreDB');
-const genres = [
-    {id: 1, name: 'Action'},
-    {id: 2, name: 'Horror'},
-    {id: 3, name: 'Romance'}
-
-];
 
 const schema = {
     name: Joi.string().min(3).required(),
+    id: Joi.number().min(1).required(),
 };
 
 //GET REQUEST TO SERVER TO SEE ALL GENRES
 router.get('/', (req, res) => {
-    res.send(genres);
+    
+    genreDB.getGenres()
+           .then((result) => {
+               if (!result.message) {
+                   res.send(result.result);
+                   return;
+               } else {
+                   res.status(404).send(result.message);
+                   return;
+               }
+        
+           });
+    ; //no need for catch block. always returns resolved promise
     
 });
 
@@ -23,18 +30,31 @@ router.get('/', (req, res) => {
 router.get('/:id', (req, res) => {
     //See if id of course exists
     const param_id = parseInt(req.params.id);
-    const genre = genres.find(g => g.id === param_id);
-    if (!genre) {
-        res.status(404).send(`Course with ID: ${param_id} doesnt exist`);
-        return;
-    }
     
-    return res.send(genre);
+    genreDB.getGenreById(param_id)
+           .then((result) => {
+               if (!result.message) {
+                   if (result.result.length === 0) {
+                       res.status(404).send(`Genre with ID: ${param_id} doesnt exist`);
+                       return;
+                   } else {
+                       res.send(result.result);
+                       return;
+                   }
+            
+               } else {
+                   res.status(404).send(result.message);
+                   return;
+               }
+        
+           });
     
 });
 // POST Request to create a new genre
-router.post('/', (req, res) => {
+router.post('/:id', (req, res) => {
+    const param_id = parseInt(req.params.id);
     const body = req.body;
+    body.id = param_id;
     const result = validateGenre(body);
     
     if (result.error) {
@@ -42,13 +62,22 @@ router.post('/', (req, res) => {
         return;
     }
     
-    const new_course = {
+    const new_genre = {
         name: body.name,
-        id: genres.length + 1,
+        id: param_id,
     };
     
-    genres.push(new_course);
-    res.send(new_course);
+    genreDB.createGenre(new_genre)
+           .then((result) => {
+               if (!result.message) {
+                   res.send(result.result);
+                   return;
+               } else {
+                   res.status(404).send(result.message);
+                   return;
+               }
+        
+           });
     
 });
 
@@ -56,40 +85,42 @@ router.post('/', (req, res) => {
 router.put('/:id', (req, res) => {
     
     const param_id = parseInt(req.params.id);
-    const genre = genres.find(g => g.id === param_id);
-    if (!genre) {
-        res.status(404).send(`Course with ID: ${param_id} doesnt exist`);
-        return;
-    }
     const body = req.body;
+    body.id = param_id;
+    
     const result = validateGenre(body);
     
     if (result.error) {
-        res.status(404).send(`BAD Request. ${result.error.details[0].message}`);
+        res.status(404).send(`${result.error.details[0].message}`);
         return;
+    } else {
+        genreDB.upDateGenreByID(body)
+               .then((result) => {
+                   if (!result.result) {
+                       res.status(404).send(result.message);
+                   } else {
+                       res.send(result.result);
+                   }
+               });
+        
     }
-    
-    genre.name = body.name;
-    res.send(genre);
     
 });
 
 //DELETE Request to Delete a Particular Genre
 router.delete('/:id', (req, res) => {
     const param_id = parseInt(req.params.id);
-    const genre = genres.find((g) => {
-        return g.id === param_id;
-    });
-    if (!genre) {
-        res.status(404).send(`Course with ID: ${param_id} doesnt exist`);
-        return;
-    }
-    const indexOfElementToDelete = genres.findIndex((genre) => {
-        return genre.id === param_id;
-    });
-    genres.splice(indexOfElementToDelete, 1);
-    res.send(genre);
-    return;
+    
+    genreDB.removeGenreByID(param_id)
+           .then((result) => {
+               if (!result.result) {
+                   res.status(404).send(result.message);
+                   return;
+               } else {
+                   res.send(result.result);
+                   return;
+               }
+           });
     
 });
 

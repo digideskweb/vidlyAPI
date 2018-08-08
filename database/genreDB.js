@@ -15,7 +15,6 @@ const genreSchema = new mongoose.Schema({
                                             id: {
                                                 type: Number,
                                                 required: true,
-                                                unique: true,
                                                 min: 1,
                                             }
                                         }, {toObject: {getters: true}});
@@ -28,6 +27,7 @@ async function getGenres() {
         return Promise.resolve({result: genres, message: null}); //need to return Promise so that it can be awaited
     } catch (e) {                                                // in genresWithDB file
         return Promise.resolve({result: null, message: e.message});
+        
     }
     
 }
@@ -55,7 +55,6 @@ async function createGenre(newGenre) {
 async function getGenreById(id) {
     try {
         const genre = await Genre.find({id: id}).select({_id: 0});
-        console.log(genre);
         return Promise.resolve({result: genre, message: null});
     } catch (e) {
         console.log('Could not find the genre');
@@ -112,5 +111,7 @@ module.exports = {
     getGenreById,
     upDateGenreByID,
     removeGenreByID,
+    genreSchema,
+    Genre,
 };
 

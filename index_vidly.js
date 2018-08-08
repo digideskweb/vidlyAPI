@@ -1,18 +1,19 @@
 const express = require('express');
 const app = express();
-const genre_router = require('./routers/genresWithDB');
+const genre_router = require('./routers/genres');
 const home_router = require('./homepage/home');
 const morgan = require('morgan');
 const mongoose = require('mongoose');
 const customers = require('./routers/customers');
-
-
+const movies = require('./routers/movies');
 
 app.use(express.json());
 app.use(morgan('tiny'));
 app.use('/', home_router);
 app.use('/api/genres', genre_router);
 app.use('/api/customers', customers);
+app.use('/api/movies', movies);
+
 connectToMongo();
 
 async function connectToMongo() {
@@ -22,12 +23,18 @@ async function connectToMongo() {
     } catch (e) {
         console.log("Could not connect to MongoDB");
         console.log(e.message);
+        process.exit();
         
     }
 }
+
+// Reason why program doesnt exit after failure to connect to DB is because
+// both connectToMongo() and app.listen are async , and app.listen keeps on
+// listening for connections even after async connect to mongo fails.
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, function () {
     console.log(`Listening to PORT ${PORT}`, `Visit: http://localhost:${PORT}`);
     
 });
+
