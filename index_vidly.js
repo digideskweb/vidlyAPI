@@ -8,6 +8,7 @@ const customers = require('./routers/customers');
 const movies = require('./routers/movies');
 const rentals = require('./routers/rentals');
 const users = require('./routers/users');
+const auth = require('./routers/auth');
 
 app.use(express.json());
 app.use(morgan('tiny'));
@@ -17,6 +18,7 @@ app.use('/api/customers', customers);
 app.use('/api/movies', movies);
 app.use('/api/rentals', rentals);
 app.use('/api/users', users);
+app.use('/api/auth', auth);
 
 connectToMongo();
 
