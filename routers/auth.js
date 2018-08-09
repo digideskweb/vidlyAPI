@@ -4,10 +4,8 @@ const router = express.Router();
 const Joi = require('joi');
 const userDB = require('../database/userDB');
 const bcrypt = require('bcrypt-nodejs');
-const jwt = require('jsonwebtoken');
-const config = require('config');
 
-//GET REQUEST TO SERVER TO SEE ALL GENRES
+//POST request to see if a user exist or not. Allowd user to log in
 router.post('/', async (req, res) => {
     
     const body = req.body;
@@ -28,7 +26,7 @@ router.post('/', async (req, res) => {
             res.status(400).send("Could not match password. ");
         } else {
             if (result) {
-                const token = jwt.sign({_id: user._id}, config.get("jwtPrivateKey"));
+                const token = user.generateAuthToken();
                 res.send(token);
             } else {
                 res.status(400).send("Invalid email or password ");

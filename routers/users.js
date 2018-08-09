@@ -4,10 +4,8 @@ const router = express.Router();
 const Joi = require('joi');
 const userDB = require('../database/userDB');
 const bcrypt = require('bcrypt-nodejs');
-const jwt = require('jsonwebtoken');
-const config = require('config');
 
-//GET REQUEST TO SERVER TO SEE ALL GENRES
+//POST request to register a user
 router.post('/', async (req, res) => {
     
     const body = req.body;
@@ -40,7 +38,7 @@ router.post('/', async (req, res) => {
                 } else {
                     user.password = result_;
                     const userSaveResult = await user.save();
-                    const token = jwt.sign({_id: user._id}, config.get("jwtPrivateKey"));
+                    const token = user.generateAuthToken();
                     return res.header('x-auth-token', token).send(_.pick(userSaveResult, ['_id', 'name', 'email']));
                 }
                 
