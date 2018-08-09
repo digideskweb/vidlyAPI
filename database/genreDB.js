@@ -41,6 +41,7 @@ async function createGenre(newGenre) {
                             });
     
     try {
+        
         const result = await genre.save(); //raises exception if genre doesnt match schema
         console.log(result);
         return Promise.resolve({result: result, message: null});

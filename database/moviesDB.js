@@ -39,7 +39,7 @@ const Movie = mongoose.model('movie', movieSchema);
 async function getMovies() {
     try {
         console.log("Finding All Movie...");
-        const movies = await Movie.find().select({_id: 0});
+        const movies = await Movie.find();
         return Promise.resolve({result: movies, message: null});
     } catch (e) {
         console.log(e.message);
@@ -71,21 +71,64 @@ async function createMovie({title, numberInStock, dailyRentalRate, genre}) {
 
 async function getMovieById(id) {
     try {
-        const movie = await Movie.find({_id: id}).select({_id: 0});
+        const movie = await Movie.find({_id: id});
         console.log(movie);
         return Promise.resolve({result: movie, message: null});
     } catch (e) {
-        console.log('Could not find the movie');
-        console.log(e.message);
+        e.message = `Could not find the movie with id: ${id}. ` + e.message;
         return Promise.resolve({result: null, message: e.message});
         
     }
     
 };
 
+async function updateMovieById(updateRequestBody) {
+    try {
+        const updatedMovie = await Movie.findByIdAndUpdate(
+            {_id: updateRequestBody.id},
+            {$set: updateRequestBody},
+            {new: true}
+        );
+        
+        if (!updatedMovie) {
+            return Promise.resolve({
+                                       result: null,
+                                       message: `Movie with id: ${updateRequestBody.id} doesnt exist`
+                                   });
+        } else {
+            return Promise.resolve({result: updatedMovie, message: null});
+        }
+        
+    } catch (e) {
+        e.message = "Could not update movie. " + e.message;
+        return Promise.resolve({result: null, message: e.message});
+        
+    }
+}
+
+async function removeMovieById(id) {
+    try {
+        const movie = await Movie.findOneAndRemove({_id: id});
+        if (!movie) {
+            return Promise.resolve({
+                                       result: null,
+                                       message: `Movie with ID : ${id} does not exist`
+                                   });
+        } else {
+            return Promise.resolve({result: movie, message: null});
+        }
+    } catch (e) {
+        console.log("Movie Removal Unsuccessfull");
+        return Promise.resolve({result: null, message: e.message});
+    }
+    
+}
+
 module.exports = {
     getMovies,
     createMovie,
     getMovieById,
+    updateMovieById,
+    removeMovieById,
 };
 

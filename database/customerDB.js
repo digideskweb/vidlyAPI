@@ -74,7 +74,7 @@ async function createCustomer(newCustomer) {
 
 async function getCustomerById(id) {
     try {
-        const customer = await Customer.find({id: id}).select({_id: 0});
+        const customer = await Customer.find({id: id});
         console.log(customer);
         return Promise.resolve({result: customer, message: null});
     } catch (e) {
@@ -106,7 +106,6 @@ async function upDateCustomerByID(updateElements) {
         
     } catch (e) {
         console.log("Could not update Customer");
-        console.log(e.message);
         return Promise.resolve({result: null, message: e.message});
     }
     

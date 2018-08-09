@@ -23,7 +23,7 @@ async function connectToMongo() {
     } catch (e) {
         console.log("Could not connect to MongoDB");
         console.log(e.message);
-        process.exit();
+        process.exit(); // Terminates the app.listen running loop
         
     }
 }
