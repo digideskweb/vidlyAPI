@@ -4,6 +4,8 @@ const router = express.Router();
 const Joi = require('joi');
 const userDB = require('../database/userDB');
 const bcrypt = require('bcrypt-nodejs');
+const jwt = require('jsonwebtoken');
+const config = require('config');
 
 //GET REQUEST TO SERVER TO SEE ALL GENRES
 router.post('/', async (req, res) => {
@@ -38,13 +40,13 @@ router.post('/', async (req, res) => {
                 } else {
                     user.password = result_;
                     const userSaveResult = await user.save();
-                    return res.send(_.pick(userSaveResult, ['_id', 'name', 'email']));
+                    const token = jwt.sign({_id: user._id}, config.get("jwtPrivateKey"));
+                    return res.header('x-auth-token', token).send(_.pick(userSaveResult, ['_id', 'name', 'email']));
                 }
                 
             });
         }
     });
-    
     
 });
 
