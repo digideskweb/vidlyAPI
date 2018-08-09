@@ -9,6 +9,14 @@ const movies = require('./routers/movies');
 const rentals = require('./routers/rentals');
 const users = require('./routers/users');
 const auth = require('./routers/auth');
+const config = require('config');
+
+if (!config.get("jwtPrivateKey")) {
+    console.error("Fatal Error. jwtPrivateKey not defined");
+    process.exit(1);
+}else {
+    console.log("Starting with secure key ", config.get("jwtPrivateKey"));
+}
 
 app.use(express.json());
 app.use(morgan('tiny'));
