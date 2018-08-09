@@ -29,8 +29,10 @@ router.post('/', async (req, res) => {
     //customer id is integer id
     let customer = "";
     const result = await customerDB.getCustomerById(req.body.customerId);
-    if (result.message) {
-        return res.status(400).send('Invalid customer.' + result.message);
+    if (result.result.length === 0) {
+        return res.status(404).send(`Customer with ID: ${req.body.customerId} doesnt exist`);
+    } else if (result.message) {
+        return res.status(400).send('Could not find the customer. ' + result.message);
     } else {
         customer = result.result[0];
     }
@@ -39,7 +41,8 @@ router.post('/', async (req, res) => {
     let movie = "";
     const movieResult = await movieDB.getMovieById(req.body.movieId);
     if (movieResult.message) {
-        return res.status(400).send('Invalid movie.' + movieResult.message);
+        return res.status(404).send(`Movie with ID: ${req.body.movieId} doesnt exist. `
+                                        + movieResult.message);
     } else {
         movie = movieResult.result[0];
     }

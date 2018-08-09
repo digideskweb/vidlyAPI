@@ -75,7 +75,6 @@ async function getMovieById(id) {
         console.log(movie);
         return Promise.resolve({result: movie, message: null});
     } catch (e) {
-        e.message = `Could not find the movie with id: ${id}. ` + e.message;
         return Promise.resolve({result: null, message: e.message});
         
     }

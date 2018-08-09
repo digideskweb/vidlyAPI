@@ -7,6 +7,7 @@ const mongoose = require('mongoose');
 const customers = require('./routers/customers');
 const movies = require('./routers/movies');
 const rentals = require('./routers/rentals');
+const users = require('./routers/users');
 
 app.use(express.json());
 app.use(morgan('tiny'));
@@ -15,6 +16,7 @@ app.use('/api/genres', genre_router);
 app.use('/api/customers', customers);
 app.use('/api/movies', movies);
 app.use('/api/rentals', rentals);
+app.use('/api/users', users);
 
 connectToMongo();
 
