@@ -1,7 +1,9 @@
 const express = require('express');
+const _ = require('lodash');
 const router = express.Router();
 const Joi = require('joi');
 const userDB = require('../database/userDB');
+const bcrypt = require('bcrypt-nodejs');
 
 //GET REQUEST TO SERVER TO SEE ALL GENRES
 router.post('/', async (req, res) => {
@@ -24,9 +26,25 @@ router.post('/', async (req, res) => {
                                password: body.password
         
                            });
+    let salt = '';
+    bcrypt.genSalt(10, (err, result_) => {
+        if (err) {
+            console.log(err);
+        } else {
+            salt = result_;
+            bcrypt.hash(user.password, salt, undefined, async (err, result_) => {
+                if (err) {
+                    console.log(err);
+                } else {
+                    user.password = result_;
+                    const userSaveResult = await user.save();
+                    return res.send(_.pick(userSaveResult, ['_id', 'name', 'email']));
+                }
+                
+            });
+        }
+    });
     
-    const userSaveResult = await user.save();
-    return res.send(userSaveResult);
     
 });
 
