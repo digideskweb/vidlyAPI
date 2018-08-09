@@ -1,9 +1,13 @@
 const rentalDB = require('../database/rentalDB');
+const Joi = require('joi');
 const movieDB = require('../database/moviesDB');
 const customerDB = require('../database/customerDB');
 const mongoose = require('mongoose');
 const express = require('express');
 const router = express.Router();
+const Fawn = require('fawn');
+
+Fawn.init(mongoose);
 
 router.get('/', async (req, res) => {
     const rentals = await rentalDB.find().sort('-dateOut');
@@ -37,7 +41,7 @@ router.post('/', async (req, res) => {
     if (movieResult.message) {
         return res.status(400).send('Invalid movie.' + movieResult.message);
     } else {
-        movie = result.result[0];
+        movie = movieResult.result[0];
     }
     
     if (movie.numberInStock === 0) {
@@ -66,11 +70,19 @@ router.post('/', async (req, res) => {
     // DB operations happen at the same time. If any one of them fails, both
     // of them roll back. In mongo, it is done via library Fawn through 2
     // phase commit. Google to know more.
-    rental = await rental.save();
-    movie.numberInStock--;
-    movie.save();
-    
-    res.send(rental);
+    try {
+        // This is a transaction via 2 phase commit
+        new Fawn.Task()
+            .save('rentals', rental)
+            .update('movies', {_id: movie._id}, {$inc: {numberInStock: -1}})
+            .run();
+        
+        res.send(rental);
+        
+    } catch (e) {
+        res.status(500).send('DB Transaction Failed ' + e.message);
+        
+    }
     
 });
 
