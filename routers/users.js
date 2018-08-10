@@ -4,8 +4,22 @@ const router = express.Router();
 const Joi = require('joi');
 const userDB = require('../database/userDB');
 const bcrypt = require('bcrypt-nodejs');
+const auth = require('../middlewares/auth');
 
-//POST request to register a user in userDB
+//GET request to see your user detail. Not passing id as request parameter
+// as you can easily steal someone elses id and paste it here. This end
+// point will only be available to authenticated users with a json web
+// token. But remember, here we are using auth for authorization, not for
+// authentication.
+
+router.get('/me', auth, async (req, res) => {
+    
+    const user = await userDB.User.findById(req.user._id).select('-password');
+    return res.send(user);
+    
+});
+
+//POST request to register a new user in userDB
 router.post('/', async (req, res) => {
     
     const body = req.body;
