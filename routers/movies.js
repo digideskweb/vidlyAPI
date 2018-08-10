@@ -100,7 +100,7 @@ router.post('/:id', async (req, res) => {
 
 });
 
-//PUT Request to Update a particular Movie. The id param is a movie id
+//PUT Request to Update a particular Movie. The id param is a movie object id
 router.put('/:id', (req, res) => {
 
     const movie_id = String(req.params.id);

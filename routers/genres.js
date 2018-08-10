@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const Joi = require('joi');
 const genreDB = require('../database/genreDB');
+const auth = require('../middlewares/auth');
 
 const schema = {
     name: Joi.string().min(3).required(),
@@ -51,7 +52,8 @@ router.get('/:id', (req, res) => {
     
 });
 // POST Request to create a new genre
-router.post('/:id', (req, res) => {
+// auth middleware gets executed before the (req, res) middleware
+router.post('/:id',auth, (req, res) => {
     const param_id = parseInt(req.params.id);
     const body = req.body;
     body.id = param_id;

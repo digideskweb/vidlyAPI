@@ -9,6 +9,7 @@ const Fawn = require('fawn');
 
 Fawn.init(mongoose);
 
+//GET request to get all rentals
 router.get('/', async (req, res) => {
     const rentals = await rentalDB.find().sort('-dateOut');
     res.send(rentals);
@@ -22,6 +23,7 @@ router.get('/:id', async (req, res) => {
     res.send(rental);
 });
 
+//POST request to create a particular rental
 router.post('/', async (req, res) => {
     const {error} = validate(req.body);
     if (error) return res.status(400).send(error.details[0].message);

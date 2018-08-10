@@ -5,7 +5,7 @@ const Joi = require('joi');
 const userDB = require('../database/userDB');
 const bcrypt = require('bcrypt-nodejs');
 
-//POST request to register a user
+//POST request to register a user in userDB
 router.post('/', async (req, res) => {
     
     const body = req.body;
@@ -35,6 +35,8 @@ router.post('/', async (req, res) => {
             bcrypt.hash(user.password, salt, undefined, async (err, result_) => {
                 if (err) {
                     console.log(err);
+                    return res.status(404).send("Could not save password." +
+                                                    " Please try again");
                 } else {
                     user.password = result_;
                     const userSaveResult = await user.save();
