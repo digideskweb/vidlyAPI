@@ -12,6 +12,8 @@ const auth = require('./routers/auth');
 const config = require('config');
 const error = require('./middlewares/error');
 const winston = require('winston');
+const helmet = require('helmet');
+const compression = require('compression');
 
 winston.add(new winston.transports.File({filename: 'logfile.log'}));
 process.on('uncaughtException', (ex) => {
@@ -34,6 +36,8 @@ app.use('/api/movies', movies);
 app.use('/api/rentals', rentals);
 app.use('/api/users', users);
 app.use('/api/auth', auth);
+app.use(helmet());
+app.use(compression());
 //app.use(error);
 
 connectToMongo();
