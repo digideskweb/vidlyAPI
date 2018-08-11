@@ -10,11 +10,15 @@ const rentals = require('./routers/rentals');
 const users = require('./routers/users');
 const auth = require('./routers/auth');
 const config = require('config');
+const error = require('./middlewares/error');
+const winston = require('winston');
+
+winston.add(new winston.transports.File({filename: 'logfile.log'}));
 
 if (!config.get("jwtPrivateKey")) {
     console.error("Fatal Error. jwtPrivateKey not defined");
     process.exit(1);
-}else {
+} else {
     console.log("Starting with secure key ", config.get("jwtPrivateKey"));
 }
 
@@ -27,6 +31,7 @@ app.use('/api/movies', movies);
 app.use('/api/rentals', rentals);
 app.use('/api/users', users);
 app.use('/api/auth', auth);
+//app.use(error);
 
 connectToMongo();
 

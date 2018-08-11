@@ -4,6 +4,7 @@ const Joi = require('joi');
 const genreDB = require('../database/genreDB');
 const auth = require('../middlewares/auth');
 const admin = require('../middlewares/admin');
+const winston = require('winston');
 
 const schema = {
     name: Joi.string().min(3).required(),
@@ -19,6 +20,7 @@ router.get('/', (req, res) => {
                    res.send(result.result);
                    return;
                } else {
+                   winston.log('error', result.message);
                    res.status(500).send("Fatal DB Error. " + result.message);
                    return;
                }
