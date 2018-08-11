@@ -3,6 +3,7 @@ const router = express.Router();
 const Joi = require('joi');
 const genreDB = require('../database/genreDB');
 const auth = require('../middlewares/auth');
+const admin = require('../middlewares/admin');
 
 const schema = {
     name: Joi.string().min(3).required(),
@@ -18,7 +19,7 @@ router.get('/', (req, res) => {
                    res.send(result.result);
                    return;
                } else {
-                   res.status(404).send(result.message);
+                   res.status(500).send("Fatal DB Error. " + result.message);
                    return;
                }
         
@@ -53,7 +54,7 @@ router.get('/:id', (req, res) => {
 });
 // POST Request to create a new genre
 // auth middleware gets executed before the (req, res) middleware
-router.post('/:id',auth, (req, res) => {
+router.post('/:id', auth, (req, res) => {
     const param_id = parseInt(req.params.id);
     const body = req.body;
     body.id = param_id;
@@ -110,7 +111,7 @@ router.put('/:id', (req, res) => {
 });
 
 //DELETE Request to Delete a Particular Genre
-router.delete('/:id', (req, res) => {
+router.delete('/:id', [auth, admin], (req, res) => {
     const param_id = parseInt(req.params.id);
     
     genreDB.removeGenreByID(param_id)
@@ -132,7 +133,6 @@ function validateGenre(requestBody) {
 }
 
 module.exports = router;
-
 
 
 

@@ -5,7 +5,7 @@ const Joi = require('joi');
 const userDB = require('../database/userDB');
 const bcrypt = require('bcrypt-nodejs');
 
-//POST request to see if a user exist or not. Allowd user to log in
+//POST request to see if a user exist or not. Allows user to log in
 router.post('/', async (req, res) => {
     
     const body = req.body;
