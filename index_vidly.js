@@ -49,6 +49,7 @@ async function connectToMongo() {
     } catch (e) {
         console.log("Could not connect to MongoDB");
         console.log(e.message);
+        winston.log('error', e.message);
         process.exit(); // Terminates the app.listen running loop
         
     }
