@@ -44,7 +44,7 @@ connectToMongo();
 
 async function connectToMongo() {
     try {
-        const result = await mongoose.connect('mongodb://localhost/playground');
+        const result = await mongoose.connect(config.get("db"));
         console.log("Connected to MongoDB");
     } catch (e) {
         console.log("Could not connect to MongoDB");
@@ -61,7 +61,9 @@ async function connectToMongo() {
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, function () {
-    console.log(`Listening to PORT ${PORT}`, `Visit: http://localhost:${PORT}`);
+    //console.log(`Listening to PORT ${PORT}`, `Visit:
+    // http://localhost:${PORT}`);
+    winston.info("Server Started");
     
 });
 

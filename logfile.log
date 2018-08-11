@@ -1,3 +1,4 @@
 {"level":"error","message":"failed to reconnect after 30 attempts with interval 1000 ms"}
 {"level":"error","message":"Topology was destroyed"}
 {"level":"error","message":"Topology was destroyed"}
+{"message":"Server Started","level":"info"}
