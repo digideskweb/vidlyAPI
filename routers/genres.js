@@ -56,7 +56,7 @@ router.get('/:id', (req, res) => {
 });
 // POST Request to create a new genre
 // auth middleware gets executed before the (req, res) middleware
-router.post('/:id', auth, (req, res) => {
+router.post('/:id', auth, async (req, res) => {
     const param_id = parseInt(req.params.id);
     const body = req.body;
     body.id = param_id;
@@ -65,6 +65,11 @@ router.post('/:id', auth, (req, res) => {
     if (result.error) {
         res.status(404).send(`BAD Request. ${result.error.details[0].message}`);
         return;
+    }
+    
+    const userAlready = await genreDB.Genre.findOne({id: body.id});
+    if (userAlready) {
+        return res.status(400).send(`Genre with id ${body.id} already exists`);
     }
     
     const new_genre = {
