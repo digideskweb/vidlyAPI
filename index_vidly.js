@@ -14,6 +14,9 @@ const error = require('./middlewares/error');
 const winston = require('winston');
 
 winston.add(new winston.transports.File({filename: 'logfile.log'}));
+process.on('uncaughtException', (ex) => {
+    winston.error(ex.message, ex);
+});
 
 if (!config.get("jwtPrivateKey")) {
     console.error("Fatal Error. jwtPrivateKey not defined");
